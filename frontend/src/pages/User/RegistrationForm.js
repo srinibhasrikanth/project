@@ -38,28 +38,7 @@ const RegistrationForm = ({ course }) => {
   const [loading, setLoading] = useState(false);
   const [reg, setReg] = useState(false);
 
-  useEffect(() => {
-    // Fetch course details from the backend
-    const fetchReg = async () => {
-      try {
-        // Extract the course ID from the URL
-        const courseId = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
-        // Make a GET request to fetch course details
-        const response = await axios.get(
-          ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`
-        );
-        if (response.status === 200) {
-          setReg(true);
-        } else if (response.status === 203) {
-          setReg(false);
-        }
-      } catch (error) {
-        console.error("Error fetching course details:", error);
-      }
-    };
-
-    fetchReg();
-  }, []);
+  
   const handleSubmit = async () => {
     setLoading(true); // Set loading to true when button is clicked
     try {
@@ -133,6 +112,7 @@ const RegistrationForm = ({ course }) => {
         // Extract only the necessary fields for registration and set them in the state
         const { name, rollNumber, branch, year, section, whatsAppNumber } =
           userData;
+
         setRegistrationData({
           name,
           rollNumber,
@@ -141,9 +121,26 @@ const RegistrationForm = ({ course }) => {
           section,
           whatsAppNumber,
         });
+        try {
+          // Extract the course ID from the URL
+          const courseId = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
+          // Make a GET request to fetch course details
+          const response = await axios.post(
+            ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`, {rollNumber: rollNumber}
+          );
+          if (response.status === 200) {
+            setReg(true);
+            
+          } else if (response.status === 203) {
+            setReg(false);
+          }
+        } catch (error) {
+          console.error("Error fetching course details:", error);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
+
     };
 
     fetchUserData();
@@ -276,7 +273,7 @@ const RegistrationForm = ({ course }) => {
                     InputLabelProps={{ shrink: true }}
                   />
 
-                  {registrationSuccess ? (
+                  {reg ? (
                     <>
                       <Button variant="contained">
                         <Link to="/dashboard/:token">Explore more courses</Link>

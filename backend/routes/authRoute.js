@@ -9,6 +9,7 @@ const {
   resetPasswordController,
   razorPayController,
   getAllUsersController,
+  deleteUserController,
 } = require("../controllers/authController");
 const userModel = require("../models/userModel.js");
 const {
@@ -95,5 +96,7 @@ router.get("/user/:userId", authenticateJWT, async (req, res) => {
 router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true });
 });
+
+router.put("/delete-user/:userid", deleteUserController);
 
 module.exports = router;

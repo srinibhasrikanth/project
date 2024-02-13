@@ -79,33 +79,66 @@ export default function Attendance() {
     });
     setAttendanceObject(newAttendanceObject);
   };
+  // const handleSave = async () => {
+  //   try {
+  //     const courseId = window.location.pathname.split("/").pop();
+
+  //     // Send the updated attendance data to the backend
+  //     const response = await axios.post(
+  //       `http://localhost:8000/api/v1/attendance/save-attendance/${courseId}`,
+  //       {
+  //         date: attendanceDate,
+  //         rollNumberStatus: attendanceObject,
+  //       }
+  //     );
+
+  //     // Handle the response as needed
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error saving attendance data:", error);
+  //   }
+  // };
+  const handleDateChange = (e) => {
+    setAttendanceDate(e.target.value);
+  };
+
   const handleSave = async () => {
     try {
       const courseId = window.location.pathname.split("/").pop();
 
-      // Send the updated attendance data to the backend
+      // Create an object to store attendance data
+      const attendanceObject = {
+        date: attendanceDate,
+        rollNumberStatus: {},
+      };
+
+      // Loop through registrations to construct rollNumberStatus
+      registrations.forEach((registration) => {
+        // Add roll number and attendance status to rollNumberStatus object
+        attendanceObject.rollNumberStatus[registration.rollNumber] =
+          registration.attendance ? "present" : "absent";
+      });
+
+      // Log the attendance object in the console
+      console.log(attendanceObject);
+
+      // Send the attendance object to the backend for further processing if needed
       const response = await axios.post(
         `http://localhost:8000/api/v1/attendance/save-attendance/${courseId}`,
-        {
-          date: attendanceDate,
-          rollNumberStatus: attendanceObject,
-        }
+        attendanceObject
       );
-
+      toast.success("Attendance submitted successfully");
       // Handle the response as needed
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error("Error saving attendance data:", error);
     }
   };
 
-  const handleDateChange = (e) => {
-    setAttendanceDate(e.target.value);
-  };
-
   return (
     <>
       <FacultyNavbar />
+
       <div
         style={{ padding: "20px", textAlign: "center", position: "relative" }}
       >

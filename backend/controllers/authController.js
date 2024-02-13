@@ -4,6 +4,56 @@ const { hashPassword, comparePassword } = require("../helper/authHelper.js");
 const adminModel = require("../models/adminModel.js");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+
+// controllers/authController.js
+
+const fs = require("fs");
+const path = require("path");
+
+// Path to the deletedusers.js file
+const deletedUsersFilePath = path.join(__dirname, "..", "deletedusers.js");
+
+// Function to delete a user
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Perform deletion logic here (e.g., delete user from the database)
+
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ success: false, message: "Error deleting user" });
+  }
+};
+
+// Function to add a deleted user to deletedusers.js
+exports.addDeletedUser = async (req, res) => {
+  try {
+    const userData = req.body;
+
+    // Read the current contents of deletedusers.js
+    let deletedUsers = require(deletedUsersFilePath);
+
+    // Add the deleted user's data to deletedusers.js
+    deletedUsers.push(userData);
+
+    // Write the updated data back to deletedusers.js
+    fs.writeFileSync(deletedUsersFilePath, JSON.stringify(deletedUsers));
+
+    res.status(200).json({
+      success: true,
+      message: "Deleted user added to deletedusers.js",
+    });
+  } catch (error) {
+    console.error("Error adding deleted user:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error adding deleted user" });
+  }
+};
 //user signup
 const registerController = async (req, res) => {
   try {
@@ -407,8 +457,34 @@ const getAllUsersController = async (req, res) => {
     res.status(500).json({ error: "Error in getting all users" });
   }
 };
+
+const deleteUserController = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await User.findByIdAndUpdate(id, { deleted: true });
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const deleteIconController = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Update the user's delete flag to 1
+    await userModel.findByIdAndUpdate(userId, { delete: 1 });
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   registerController,
+  deleteUserController,
   loginController,
   registerAdminController,
   loginAdminController,
@@ -416,4 +492,5 @@ module.exports = {
   resetPasswordController,
   razorPayController,
   getAllUsersController,
+  deleteIconController,
 };

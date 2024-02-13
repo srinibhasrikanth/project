@@ -12,9 +12,9 @@ import {
   Button,
   MenuItem,
   Select,
-  FormControl,
-  InputLabel,
+  IconButton, // Import IconButton
 } from "@mui/material";
+import { Delete as DeleteIcon } from "@mui/icons-material"; // Import DeleteIcon
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -38,6 +38,20 @@ const Users = () => {
 
     fetchUsers();
   }, []);
+  const handleDelete = async (userId) => {
+    try {
+      // Send a PUT request to update the user's delete flag
+      await axios.put(
+        `http://localhost:8000/api/v1/auth/delete-user/${userId}`
+      );
+
+      // Update the users state to remove the deleted user
+      const updatedUsers = users.filter((user) => user._id !== userId);
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   const handleExportToExcel = () => {
     // Prepare data for Excel export
@@ -118,7 +132,6 @@ const Users = () => {
         <MenuItem value="excel">Excel</MenuItem>
       </Select>
 
-     
       <Button
         variant="contained"
         color="primary"
@@ -139,6 +152,7 @@ const Users = () => {
               <TableCell>Roll No</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Phone No</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -148,6 +162,14 @@ const Users = () => {
                 <TableCell>{user.rollNumber}</TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.whatsappNumber}</TableCell>
+                <TableCell>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

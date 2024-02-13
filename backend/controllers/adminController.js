@@ -84,4 +84,5 @@ const retrieveController = async (req, res) => {
   }
 };
 
+
 module.exports = { updateProfile, retrieveController, resetPasswordController };

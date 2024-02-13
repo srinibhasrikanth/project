@@ -43,12 +43,158 @@ const FacultyReport = ({ courseId }) => {
     fetchRegistrations();
   }, [courseId]);
 
+  // const downloadExcel = () => {
+  //   try {
+  //     const workbook = XLSX.utils.book_new();
+  //     const worksheet = XLSX.utils.table_to_sheet(
+  //       document.getElementById("report-table"),
+  //       { raw: true }
+  //     );
+
+  //     // Add College Name, Course Name, and Resource Person
+  //     XLSX.utils.sheet_add_aoa(
+  //       worksheet,
+  //       [
+  //         [
+  //           `College Name: VNR Vignana Jyothi Institute of Engineering and Technology`,
+  //         ],
+  //         [`Course Name: ${courseName}`],
+  //         [`Resource Person: ${resourcePerson}`],
+  //       ],
+  //       { origin: "A1" }
+  //     );
+
+  //     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  //     const excelBuffer = XLSX.write(workbook, {
+  //       type: "buffer",
+  //       bookType: "xlsx",
+  //     });
+  //     const blob = new Blob([excelBuffer], {
+  //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+  //     });
+  //     saveAs(blob, `${courseName}.xlsx`);
+  //   } catch (error) {
+  //     console.error("Error downloading Excel file:", error);
+  //   }
+  // };
+  //header merges 6 cells
+  // const downloadExcel = () => {
+  //   try {
+  //     const workbook = XLSX.utils.book_new();
+  //     const worksheet = XLSX.utils.table_to_sheet(
+  //       document.getElementById("report-table"),
+  //       { raw: true }
+  //     );
+
+  //     // Add College Name with formatting
+  //     worksheet["A1"] = {
+  //       v: "VNR Vignana Jyothi Institute of Engineering and Technology",
+  //       t: "s",
+  //     };
+
+  //     // Merge cells for College Name
+  //     worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+
+  //     // Apply formatting for College Name
+  //     XLSX.utils.format_cell(worksheet["A1"], {
+  //       font: { name: "Times New Roman", sz: 18, bold: true },
+  //     });
+
+  //     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  //     const excelBuffer = XLSX.write(workbook, {
+  //       type: "buffer",
+  //       bookType: "xlsx",
+  //     });
+  //     const blob = new Blob([excelBuffer], {
+  //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+  //     });
+  //     saveAs(blob, `${courseName}.xlsx`);
+  //   } catch (error) {
+  //     console.error("Error downloading Excel file:", error);
+  //   }
+  // };
   const downloadExcel = () => {
     try {
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.table_to_sheet(
-        document.getElementById("report-table")
+        document.getElementById("report-table"),
+        { raw: true }
       );
+
+      // Add College Name with formatting
+      worksheet["A1"] = {
+        v: "VNR Vignana Jyothi Institute of Engineering and Technology",
+        t: "s",
+      };
+
+      // Merge cells for College Name
+      worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+
+      // Apply formatting for College Name
+      XLSX.utils.format_cell(worksheet["A1"], {
+        font: { name: "Times New Roman", sz: 18, bold: true },
+      });
+
+      // Add Course Name with formatting
+      worksheet["A2"] = {
+        v: courseName,
+        t: "s",
+      };
+
+      // Merge cells for Course Name
+      worksheet["!merges"].push({ s: { r: 1, c: 0 }, e: { r: 1, c: 2 } });
+
+      // Apply formatting for Course Name
+      XLSX.utils.format_cell(worksheet["A2"], {
+        font: { name: "Times New Roman", sz: 12, bold: true },
+      });
+
+      // Add Resource Person with formatting
+      worksheet["D2"] = {
+        v: resourcePerson,
+        t: "s",
+      };
+
+      // Merge cells for Resource Person
+      worksheet["!merges"].push({ s: { r: 1, c: 3 }, e: { r: 1, c: 5 } });
+
+      // Apply formatting for Resource Person
+      XLSX.utils.format_cell(worksheet["D2"], {
+        font: { name: "Times New Roman", sz: 12, bold: true },
+      });
+
+      // Merge cells for Start Date
+      worksheet["A3"] = {
+        v: "Start Date", // Assuming this is the header for the start date
+        t: "s",
+      };
+      worksheet["!merges"].push({ s: { r: 2, c: 0 }, e: { r: 2, c: 2 } });
+
+      // Merge cells for Timings
+      worksheet["D3"] = {
+        v: "Timings", // Assuming this is the header for the timings
+        t: "s",
+      };
+      worksheet["!merges"].push({ s: { r: 2, c: 3 }, e: { r: 2, c: 5 } });
+
+      // Fill in the table data starting from A4
+      const dataStartRow = 4;
+      registrations.forEach((registration, rowIndex) => {
+        Object.keys(registration).forEach((key, colIndex) => {
+          worksheet[
+            XLSX.utils.encode_cell({ r: rowIndex + dataStartRow, c: colIndex })
+          ] = {
+            v: registration[key],
+            t: "s",
+          };
+        });
+      });
+
+      // Set the range of the worksheet
+      const range = XLSX.utils.decode_range(worksheet["!ref"]);
+      range.e.r += registrations.length; // Increase the end row to include table data
+      worksheet["!ref"] = XLSX.utils.encode_range(range);
+
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
       const excelBuffer = XLSX.write(workbook, {
         type: "buffer",
