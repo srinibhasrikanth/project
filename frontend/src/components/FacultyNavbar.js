@@ -19,8 +19,6 @@ export default function FacultyNavbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const [header, setHeader] = useState("");
-  // Removed userRole as it seems redundant
-  // You can directly use auth.token
 
   // Handle menu open
   const handleMenu = (event) => {
@@ -31,10 +29,10 @@ export default function FacultyNavbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleChangePassword = () => {
     const id = JSON.parse(localStorage.getItem("auth"))._id;
     const token = JSON.parse(localStorage.getItem("auth")).token;
-
     navigate(`/faculty-change-password/${id}/${token}`);
   };
 
@@ -58,6 +56,7 @@ export default function FacultyNavbar() {
       navigate(`/instructor-dashboard/${auth.token}/${id}`);
     }
   };
+
   const fetchHeader = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/v1/profile");
@@ -66,9 +65,11 @@ export default function FacultyNavbar() {
       console.error("Error fetching header:", error);
     }
   };
+
   useEffect(() => {
     fetchHeader(); // Fetch the header when the component mounts
-  }, []);
+  }, [auth]); // Run the effect whenever the auth context changes
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "white" }}>
@@ -106,7 +107,7 @@ export default function FacultyNavbar() {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                color="blue" // Changed color to "inherit"
+                // Changed color to "inherit"
               >
                 <AccountCircle fontSize="inherit" />
               </IconButton>

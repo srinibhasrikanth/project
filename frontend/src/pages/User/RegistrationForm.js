@@ -38,7 +38,6 @@ const RegistrationForm = ({ course }) => {
   const [loading, setLoading] = useState(false);
   const [reg, setReg] = useState(false);
 
-  
   const handleSubmit = async () => {
     setLoading(true); // Set loading to true when button is clicked
     try {
@@ -126,11 +125,11 @@ const RegistrationForm = ({ course }) => {
           const courseId = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
           // Make a GET request to fetch course details
           const response = await axios.post(
-            ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`, {rollNumber: rollNumber}
+            ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`,
+            { rollNumber: rollNumber }
           );
           if (response.status === 200) {
             setReg(true);
-            
           } else if (response.status === 203) {
             setReg(false);
           }
@@ -140,7 +139,6 @@ const RegistrationForm = ({ course }) => {
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
-
     };
 
     fetchUserData();
@@ -171,24 +169,25 @@ const RegistrationForm = ({ course }) => {
             <Grid item xs={12} sm={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h5" mb={2}>
+                  <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
                     Course Details
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Name: {courseDetails.courseName}
+                    <strong>Name :</strong> {courseDetails.courseName}
                   </Typography>
 
                   <Typography variant="subtitle1" mb={2}>
-                    Timing: {courseDetails.timing}
+                    <strong>Timing:</strong> {courseDetails.timing}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Resource Person: {courseDetails.resourcePerson}
+                    <strong>Instructor:</strong> {courseDetails.resourcePerson}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Duration: {courseDetails.duration}
+                    <strong>Duration:</strong> {courseDetails.duration}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Course Syllabus: {courseDetails.description}
+                    <strong>Course Syllabus:</strong>{" "}
+                    {courseDetails.description}
                   </Typography>
                 </CardContent>
               </Card>

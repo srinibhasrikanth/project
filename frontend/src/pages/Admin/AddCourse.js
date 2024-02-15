@@ -54,6 +54,16 @@ const AddCourse = () => {
       } is required`;
     } else {
       validationErrors[field] = "";
+
+      if (field === "timing") {
+        // Validate course timings format
+        const timingsRegex =
+          /^((1[0-2]|0?[1-9]):([0-5][0-9])\s([APap][Mm])\s-\s(1[0-2]|0?[1-9]):([0-5][0-9])\s([APap][Mm]))$/;
+        if (!timingsRegex.test(value.trim())) {
+          validationErrors[field] =
+            "Timings should be in the format HH:MM AM/PM - HH:MM AM/PM";
+        }
+      }
     }
 
     setErrors(validationErrors);
@@ -85,10 +95,11 @@ const AddCourse = () => {
       startDate: date,
     });
   };
+
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    setLoading(true); // Set loading to true when form is submitted
+    setLoading(true); // Set loading to true when the form is submitted
 
     // Validate form fields
     const validationErrors = {};
@@ -114,9 +125,12 @@ const AddCourse = () => {
 
     if (
       !courseData.timing.trim() ||
-      !/^(\d{1,2}:\d{2}) - (\d{1,2}:\d{2})$/.test(courseData.timing.trim())
+      !/^(\d{1,2}:\d{2}\s[APap][Mm])\s-\s(\d{1,2}:\d{2}\s[APap][Mm])$/.test(
+        courseData.timing.trim()
+      )
     ) {
-      validationErrors.timing = "Timings should be in the format HH:mm - HH:mm";
+      validationErrors.timing =
+        "Timings should be in the format HH:MM AM/PM - HH:MM AM/PM";
     }
 
     if (!courseData.resourcePerson.trim()) {
@@ -153,8 +167,8 @@ const AddCourse = () => {
         startDate: "",
       });
     } catch (error) {
-      console.error("Error submitting form:", error);
-      // Handle error if submission fails
+      console.error("Error submitting the form:", error);
+      // Handle an error if the submission fails
     } finally {
       setLoading(false); // Reset loading state after submission completes
     }
@@ -233,7 +247,7 @@ const AddCourse = () => {
           />
         </div>
         <TextField
-          label="Resource Person"
+          label="Instructor"
           select
           variant="outlined"
           required
@@ -277,7 +291,7 @@ const AddCourse = () => {
             },
           }}
           onClick={handleSubmit}
-          disabled={loading} // Disable button when loading is true
+          disabled={loading} // Disable the button when loading is true
         >
           {loading ? "Adding Course..." : "Add Course"}{" "}
           {/* Show loading text when loading is true */}

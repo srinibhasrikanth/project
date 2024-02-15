@@ -25,6 +25,7 @@ import FacultyChangePassword from "./pages/Faculty/FacultyChangePassword";
 import AdminChangePassword from "./pages/Admin/AdminChangePassword";
 import Attendees from "./pages/Faculty/Attendees";
 import Users from "./pages/Admin/Users";
+import AttendanceTable from "./pages/Faculty/AttendanceTable";
 
 const App = () => {
   return (
@@ -73,6 +74,7 @@ const App = () => {
         <Route path="/add-instructor/:token" element={<AddResourcePerson />} />
         <Route path="/student-list/:token" element={<Users />} />
         <Route path="/course-report/:token/:id" element={<ReportTable />} />
+        <Route path="/attendance-table/:id" element={<AttendanceTable />} />
       </Routes>
     </>
   );

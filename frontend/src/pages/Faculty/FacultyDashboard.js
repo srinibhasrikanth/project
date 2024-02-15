@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
 import FacultyCard from "./FacultyCard";
 import FacultyNavbar from "../../components/FacultyNavbar";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { Link, useLocation } from "react-router-dom";
 
 const UnauthenticatedDashboard = () => (
   <>
@@ -11,23 +16,58 @@ const UnauthenticatedDashboard = () => (
   </>
 );
 
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`custom-tabpanel-${index}`}
+      aria-labelledby={`custom-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `custom-tab-${index}`,
+    "aria-controls": `custom-tabpanel-${index}`,
+  };
+}
+
 const AuthenticatedDashboard = ({ token }) => {
+  const [value, setValue] = useState(0);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const id = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
-
         const response = await axios.get(
-          `http://localhost:8000/api/v1/courses/get-course-by-instructor/${id}`
+          `http://localhost:8000/api/v1/courses/get-all-courses?token=${token}`
         );
-        console.log(`url token: ${token}`);
-        setCourses(response.data.course);
-        console.log(response.data.course);
+        setCourses(response.data);
         setLoading(false);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Error fetching data. Please try again later.");
@@ -38,51 +78,46 @@ const AuthenticatedDashboard = ({ token }) => {
     fetchCourses();
   }, [token]);
 
-  const renderCourseRow = (courseList) => {
-    if (!Array.isArray(courseList)) {
-      return <p>No courses available</p>;
-    }
+  const renderCourseRow = (courseList) => (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+      {courseList.map((course) => (
+        <FacultyCard key={course.id} course={course} />
+      ))}
+    </div>
+  );
 
-    return (
-      <div
-        className="ml-10"
-        style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}
-      >
-        {courseList.map((course) => (
-          <FacultyCard key={course.id} course={course} />
-        ))}
-      </div>
-    );
-  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <>
       <FacultyNavbar />
-      <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p style={{ color: "red" }}>{error}</p>
-        ) : (
-          <div>
-            <h1 className="ml-10 mt-5 mb-5 text-2xl font-semibold ">
-              My Active Courses
-            </h1>
-            {Array.isArray(courses) &&
-              courses.length > 0 &&
-              renderCourseRow(courses.filter((course) => course.active === 1))}
-
-            <h1 className="ml-10 mt-5 mb-5 text-2xl font-semibold ">
-              My Upcoming Courses
-            </h1>
-            {Array.isArray(courses) &&
-              courses.length > 0 &&
-              renderCourseRow(
-                courses.filter((course) => course.upcoming === 1)
-              )}
-          </div>
-        )}
-      </div>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="dashboard tabs"
+          >
+            <Tab label="Active Courses" {...a11yProps(0)} />
+            <Tab label="Upcoming Courses" {...a11yProps(1)} />
+            <Tab label="Completed Courses" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <CustomTabPanel value={value} index={0}>
+          {renderCourseRow(courses.filter((course) => course.active === 1))}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          {renderCourseRow(courses.filter((course) => course.upcoming === 1))}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          {renderCourseRow(
+            courses.filter(
+              (course) => course.active !== 1 && course.upcoming !== 1
+            )
+          )}
+        </CustomTabPanel>
+      </Box>
     </>
   );
 };
@@ -93,7 +128,6 @@ const FacultyDashboard = () => {
   const auth = JSON.parse(localStorage.getItem("auth")) || {};
 
   if (!auth.token) {
-    console.log("login please");
     return <UnauthenticatedDashboard />;
   }
 

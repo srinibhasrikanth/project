@@ -50,23 +50,21 @@ const getAttendanceByCourse = async (req, res) => {
     const courseId = req.params.courseId;
 
     // Find attendance records for the specified courseId
-    const attendance = await Attendance.find({ courseId });
+    const attendance = await Attendance.findOne({ courseId });
 
-    // Extract unique dates from the attendance records
-    const uniqueDates = new Set();
-    attendance.forEach((record) => {
-      record.details.forEach((detail) => {
-        uniqueDates.add(detail.date);
-      });
-    });
+    // // Extract unique dates from the attendance records
+    // const uniqueDates = new Set();
+    // attendance.forEach((record) => {
+    //   record.details.forEach((detail) => {
+    //     uniqueDates.add(detail.date);
+    //   });
+    // });
 
-    // Convert the set of unique dates to an array
-    const datesArray = [...uniqueDates];
+    // // Convert the set of unique dates to an array
+    // const datesArray = [...uniqueDates];
 
     res.status(200).json({
-      courseId,
       attendance,
-      dates: datesArray,
     });
   } catch (error) {
     console.error("Error retrieving attendance:", error);

@@ -38,7 +38,7 @@ const FacultyCard = ({ course }) => {
   };
 
   return (
-    <Card sx={{ minWidth: 275 }} style={{ marginLeft: "10px" }}>
+    <Card sx={{ minWidth: 270, height: 230 }} style={{ marginLeft: "10px" }}>
       <CardContent>
         <Typography variant="h5" component="div">
           {course.courseName}
