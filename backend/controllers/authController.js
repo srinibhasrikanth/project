@@ -90,7 +90,6 @@ const registerController = async (req, res) => {
     await user.save();
     // Send registration email
     sendRegistrationEmail(user.personalEmail, user.name);
-
     res.status(200).send({
       success: true,
       message: "User registered successfully",
@@ -191,6 +190,7 @@ const loginController = async (req, res) => {
       rollNumber,
       token,
       _id: user._id,
+      role: user.role,
     });
   } catch (error) {
     console.log(error);
@@ -260,7 +260,7 @@ const sendRegistrationEmail = async (userEmail, username) => {
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "jnyn gkvr luuv awdu",
+      pass: "myxr ixjg uejx jinf",
     },
   });
 
@@ -482,6 +482,16 @@ const deleteIconController = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const dynamicCounterController = async (req, res) => {
+  try {
+    const count = await userModel.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 module.exports = {
   registerController,
   deleteUserController,
@@ -493,4 +503,5 @@ module.exports = {
   razorPayController,
   getAllUsersController,
   deleteIconController,
+  dynamicCounterController,
 };

@@ -10,6 +10,7 @@ const {
   razorPayController,
   getAllUsersController,
   deleteUserController,
+  dynamicCounterController,
 } = require("../controllers/authController");
 const userModel = require("../models/userModel.js");
 const {
@@ -98,5 +99,7 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 });
 
 router.put("/delete-user/:userid", deleteUserController);
+
+router.get("/dynamic-counter", dynamicCounterController);
 
 module.exports = router;

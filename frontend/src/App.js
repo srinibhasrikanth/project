@@ -4,7 +4,7 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import UserDashboard from "./pages/User/UserDashboard";
 import RegistrationForm from "./pages/User/RegistrationForm";
-import Navbar from "./components/Navbar";
+import { Navbar } from "./components/Navbar";
 import AdminLogin from "./pages/Admin/AdminLogin";
 import AddCourse from "./pages/Admin/AddCourse";
 import AddResourcePerson from "./pages/Admin/AddResourcePerson";
@@ -30,6 +30,7 @@ import AttendanceTable from "./pages/Faculty/AttendanceTable";
 const App = () => {
   return (
     <>
+      <Navbar />
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Login />} />

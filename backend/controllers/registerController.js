@@ -102,7 +102,7 @@ const sendRegistrationEmail = async (
       service: "gmail",
       auth: {
         user: "srinibha.srikanth@gmail.com",
-        pass: "jnyn gkvr luuv awdu",
+        pass: "myxr ixjg uejx jinf",
       },
     });
 
