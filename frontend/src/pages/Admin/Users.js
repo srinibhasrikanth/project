@@ -64,13 +64,21 @@ const Users = () => {
   const handleExportToExcel = () => {
     // Prepare data for Excel export
     const data = users.map((user, index) => ({
-      "S.No": index + 1,
+      " S.No": index + 1,
       "Roll No": user.rollNumber,
       Name: user.name,
       "Phone No": user.whatsappNumber,
       Branch: user.branch,
       Year: user.year,
       Section: user.section,
+      Admission: user.admission,
+      Email: user.email,
+      "Father's name": user.fatherName,
+      "Father's Number": user.fatherWhatsappNumber,
+      "Mother's Name": user.motherName,
+      "Mother's Number": user.motherWhatsappNumber,
+      Address: user.currentAddress,
+      Laptop: user.laptop,
     }));
 
     // Convert data to XLSX format
@@ -120,6 +128,14 @@ const Users = () => {
       "Branch",
       "Year",
       "Section",
+      "admission",
+      "personalEmail",
+      "Father's Name",
+      "Father's Number",
+      "Mother's Name",
+      "Mother's Number",
+      "Address",
+      "Laptop",
     ];
 
     // Define rows for the table
@@ -131,6 +147,14 @@ const Users = () => {
       user.branch,
       user.year,
       user.section,
+      user.admission,
+      user.personalEmail,
+      user.fatherName,
+      user.fatherWhatsappNumber,
+      user.motherName,
+      user.motherWhatsappNumber,
+      user.currentAddress,
+      user.laptop,
     ]);
 
     // Calculate starting Y position for the table based on college name length
@@ -218,7 +242,7 @@ const Users = () => {
 
       <TableContainer
         component={Paper}
-        style={{ marginLeft: "140px", maxWidth: "1000px", marginTop: "20px" }}
+        style={{ margin: "40px", maxWidth: "1200px" }}
       >
         <Table aria-label="users table">
           <TableHead>
@@ -230,6 +254,14 @@ const Users = () => {
               <TableCell>Branch</TableCell>
               <TableCell>Year</TableCell>
               <TableCell>Section</TableCell>
+              <TableCell>Admission</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Father's Name</TableCell>
+              <TableCell>Father's Number</TableCell>
+              <TableCell>Mother's Name</TableCell>
+              <TableCell>Mother's Number</TableCell>
+              <TableCell>Address</TableCell>
+              <TableCell>Laptop</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -242,6 +274,14 @@ const Users = () => {
                 <TableCell>{user.branch}</TableCell>
                 <TableCell>{user.year}</TableCell>
                 <TableCell>{user.section}</TableCell>
+                <TableCell>{user.admission}</TableCell>
+                <TableCell>{user.personalEmail}</TableCell>
+                <TableCell>{user.fatherName}</TableCell>
+                <TableCell>{user.fatherWhatsappNumber}</TableCell>
+                <TableCell>{user.motherName}</TableCell>
+                <TableCell>{user.motherWhatsappNumber}</TableCell>
+                <TableCell>{user.currentAddress}</TableCell>
+                <TableCell>{user.laptop}</TableCell>
               </TableRow>
             ))}
           </TableBody>

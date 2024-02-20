@@ -260,7 +260,7 @@ const sendRegistrationEmail = async (userEmail, username) => {
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "myxr ixjg uejx jinf",
+      pass: process.env.pass,
     },
   });
 
@@ -342,7 +342,7 @@ const sendForgotPasswordMail = async (userEmail, username, token, id) => {
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "jnyn gkvr luuv awdu",
+      pass: process.env.pass,
     },
   });
 

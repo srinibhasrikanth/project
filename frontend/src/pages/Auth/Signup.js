@@ -429,7 +429,7 @@ const Signup = () => {
                   },
                 }}
                 style={{ display: "block", width: "fit-content" }}
-                disabled={Object.keys(errors).length !== 0} // Disable button if there are errors
+                disabled={Object.keys(errors).length !== 0}
               >
                 Create Account and Pay
               </Button>

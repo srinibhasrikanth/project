@@ -26,11 +26,11 @@ import AdminChangePassword from "./pages/Admin/AdminChangePassword";
 import Attendees from "./pages/Faculty/Attendees";
 import Users from "./pages/Admin/Users";
 import AttendanceTable from "./pages/Faculty/AttendanceTable";
+import Navbar3 from "./components/Navbar3";
 
 const App = () => {
   return (
     <>
-      <Navbar />
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Login />} />

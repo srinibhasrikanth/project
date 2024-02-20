@@ -17,7 +17,6 @@ const adminSchema = mongoose.Schema({
   },
   header: {
     type: String,
-    required: true,
   },
   logo: {},
   role: {

@@ -72,7 +72,7 @@ const sendCredentialsEmail = async (email, username, password) => {
       service: "gmail",
       auth: {
         user: "srinibha.srikanth@gmail.com",
-        pass: "jnyn gkvr luuv awdu",
+        pass: process.env.pass,
       },
     });
 
