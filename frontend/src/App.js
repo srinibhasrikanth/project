@@ -4,7 +4,6 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import UserDashboard from "./pages/User/UserDashboard";
 import RegistrationForm from "./pages/User/RegistrationForm";
-import Navbar from "./components/Navbar";
 import AdminLogin from "./pages/Admin/AdminLogin";
 import AddCourse from "./pages/Admin/AddCourse";
 import AddResourcePerson from "./pages/Admin/AddResourcePerson";
@@ -25,17 +24,21 @@ import FacultyChangePassword from "./pages/Faculty/FacultyChangePassword";
 import AdminChangePassword from "./pages/Admin/AdminChangePassword";
 import Attendees from "./pages/Faculty/Attendees";
 import Users from "./pages/Admin/Users";
+import AttendanceTable from "./pages/Faculty/AttendanceTable";
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
+import PDF from "./pages/PDF";
+import Attendance1 from "./pages/Attendance1";
+import Chart from "./components/Chart1";
 
 const App = () => {
   return (
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Login />} />
-
+        <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/admin-profile/:token" element={<AdminProfile />} />
-
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/instructor-login" element={<FacultyLogin />} />
         <Route
@@ -73,6 +76,7 @@ const App = () => {
         <Route path="/add-instructor/:token" element={<AddResourcePerson />} />
         <Route path="/student-list/:token" element={<Users />} />
         <Route path="/course-report/:token/:id" element={<ReportTable />} />
+        <Route path="/attendance-table/:id" element={<AttendanceTable />} />
       </Routes>
     </>
   );

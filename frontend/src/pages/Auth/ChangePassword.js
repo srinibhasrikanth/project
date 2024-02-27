@@ -58,76 +58,63 @@ const ChangePassword = () => {
   return (
     <>
       <UserNavbar />
-      <Container component="main" maxWidth="xs">
-        <Box
+      <div className="w-1/4 m-auto mt-10">
+        <Typography variant="h5" mb={2} className="flex justify-center">
+          CHANGE PASSWORD
+        </Typography>
+        <TextField
+          id="old-password"
+          label="Old Password"
+          variant="outlined"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+          size="small"
+        />
+        <TextField
+          id="new-password"
+          label="New Password"
+          variant="outlined"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          size="small"
+        />
+        <TextField
+          id="re-enter-new-password"
+          label="Re-enter New Password"
+          variant="outlined"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={reEnterNewPassword}
+          onChange={(e) => setReEnterNewPassword(e.target.value)}
+          size="small"
+        />
+        <Button
+          variant="contained"
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginTop: "10px",
+            backgroundColor: "white",
+            border: "1px solid",
+            borderColor: "primary.main",
+            color: "primary.main",
+            transition: "background-color 0.3s ease, transform 0.3s ease",
+            "&:hover": {
+              backgroundColor: "primary.main",
+              color: "white",
+              transform: "scale(1.05)",
+            },
           }}
+          onClick={handleSubmit}
         >
-          <Typography
-            variant="h4"
-            className="pb-5 pt-3 font-semibold text-center text-gray-700"
-          >
-            CHANGE PASSWORD
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="old-password"
-              label="Old Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              margin="normal"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-            <TextField
-              id="new-password"
-              label="New Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              margin="normal"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <TextField
-              id="re-enter-new-password"
-              label="Re-enter New Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              margin="normal"
-              value={reEnterNewPassword}
-              onChange={(e) => setReEnterNewPassword(e.target.value)}
-              error={error !== ""}
-              helperText={error}
-            />
-
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-            >
-              Change Password
-            </Button>
-          </form>
-        </Box>
-      </Container>
+          CHANGE PASSWORD
+        </Button>
+      </div>
     </>
   );
 };

@@ -60,7 +60,7 @@ export default function UserNavbar() {
   const fetchHeader = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/v1/profile");
-      setHeader(response.data.header); // Update the header state with the fetched header
+      setHeader(response.data.header);
     } catch (error) {
       console.error("Error fetching header:", error);
     }
@@ -71,113 +71,123 @@ export default function UserNavbar() {
   }, []);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "white" }}>
-        <Toolbar>
-          <Grid container alignItems="center" justifyContent="space-between">
-            {/* Logo and Text "VNRVJIET" on the left */}
-            <Grid
-              item
-              container
-              alignItems="center"
-              spacing={2}
-              className="flex"
+    <div className="flex w-full justify-center shadow-md">
+      <div className=" h-[10vh] flex items-center justify-between w-[95vw]">
+        <div className="flex gap-4 ">
+          <div>
+            <img
+              src="/images/vnrlogo.png"
+              alt="Logo"
+              style={{
+                width: "40px",
+                height: "40px",
+                cursor: "pointer",
+              }}
+              onClick={handleLogoClick}
+            />
+          </div>
+          <div>
+            <Typography
+              variant="h6"
+              sx={{ color: "black" }}
+              onClick={handleLogoClick}
             >
-              <Grid item>
-                {/* Add Link component around the logo */}
-                <img
-                  src="/images/vnrlogo.png"
-                  alt="Logo"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    marginRight: "8px",
-                    cursor: "pointer",
-                  }}
-                  onClick={handleLogoClick}
-                />
-              </Grid>
-              <Grid item>
-                <Typography
-                  variant="h6"
-                  sx={{ color: "black" }}
-                  onClick={handleLogoClick}
-                >
-                  {/* Display the header */}
-                  {header && <span>{header}</span>}
-                </Typography>
-              </Grid>
+              {header && <span>{header}</span>}
+            </Typography>
+          </div>
+        </div>
+        <div>
+          {auth?.token ? (
+            // <div>
+            //   <IconButton
+            //     size="large"
+            //     aria-label="account of current user"
+            //     aria-controls="menu-appbar"
+            //     aria-haspopup="true"
+            //     onClick={handleMenu}
+            //     color="black"
+            //     style={{ fontSize: "35px" }}
+            //   >
+            //     <AccountCircle fontSize="inherit" />
+            //   </IconButton>
+            //   <Menu
+            //     id="menu-appbar"
+            //     anchorEl={anchorEl}
+            //     anchorOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     keepMounted
+            //     transformOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     open={Boolean(anchorEl)}
+            //     onClose={handleClose}
+            //   >
+            //     <MenuItem onClick={handleChangePassword}>
+            //       Change Password
+            //     </MenuItem>
 
-              <Grid item xs={6} md={4} lg={3} container justifyContent="flex-end">
-                {auth?.token ? (
-                  <div>
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={handleMenu}
-                      color="black"
-                      style={{ fontSize: "35px" }}
-                    >
-                      <AccountCircle fontSize="inherit" />
-                    </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                    >
-                      <MenuItem onClick={handleChangePassword}>
-                        Change Password
-                      </MenuItem>
+            //     <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            //   </Menu>
+            // </div>
+            <div>
+              <Button
+                variant={isHovered[0] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([true, false])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+              >
+                <Link to="/change-password">Change Password</Link>
+              </Button>
+              {"          "}
+              <Button
+                variant={isHovered[1] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([false, true])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+                onClick={handleLogout}
+              >
+                {" "}
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-4">
+              <Button
+                variant={isHovered[0] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([true, false])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+              >
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  Login
+                </Link>
+              </Button>
 
-                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                    </Menu>
-                  </div>
-                ) : (
-                  <div className="flex gap-4">
-                    <Button
-                      variant={isHovered[0] ? "contained" : "outlined"}
-                      onMouseEnter={() => setIsHovered([true, false])}
-                      onMouseLeave={() => setIsHovered([false, false])}
-                      style={{
-                        "&:hover": { backgroundColor: "#your-hover-color" },
-                      }}
-                    >
-                      <Link to="/" style={{ textDecoration: "none" }}>
-                        Login
-                      </Link>
-                    </Button>
-
-                    <Button
-                      variant={isHovered[1] ? "contained" : "outlined"}
-                      onMouseEnter={() => setIsHovered([false, true])}
-                      onMouseLeave={() => setIsHovered([false, false])}
-                      style={{
-                        "&:hover": { backgroundColor: "#your-hover-color" },
-                      }}
-                    >
-                      <Link to="/signup" style={{ textDecoration: "none" }}>
-                        Signup
-                      </Link>
-                    </Button>
-                  </div>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </Box>
+              <Button
+                variant={isHovered[1] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([false, true])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+              >
+                <Link to="/signup" style={{ textDecoration: "none" }}>
+                  Signup
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

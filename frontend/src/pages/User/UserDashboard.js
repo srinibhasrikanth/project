@@ -3,6 +3,11 @@ import axios from "axios";
 import Card from "./Card";
 import { Link, useLocation } from "react-router-dom";
 import UserNavbar from "../../components/UserNavbar";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const UnauthenticatedDashboard = () => (
   <>
@@ -10,18 +15,54 @@ const UnauthenticatedDashboard = () => (
     <Link to="/">Click here to login</Link>
   </>
 );
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`custom-tabpanel-${index}`}
+      aria-labelledby={`custom-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography component="div">{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: ` custom-tab-${index}`,
+    "aria-controls": ` custom-tabpanel-${index}`,
+  };
+}
 
 const AuthenticatedDashboard = ({ token }) => {
+  const [value, setValue] = React.useState(0);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          ` http://localhost:8000/api/v1/courses/get-all-courses?token=${token}
-`
+          `http://localhost:8000/api/v1/courses/get-all-courses?token=${token}`
         );
         setCourses(response.data);
         setLoading(false);
@@ -35,57 +76,65 @@ const AuthenticatedDashboard = ({ token }) => {
     fetchCourses();
   }, [token]);
 
-  const renderCourseRow = (courseList, isUpcoming) => (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "20px",
-        justifyContent: "flex-start",
-      }}
-    >
-      {courseList.map((course) => (
-        <Card
-          key={course.id}
-          course={course}
-          isUpcoming={isUpcoming}
-          style={{ maxWidth: "calc(25% - 20px)" }}
-        />
-      ))}
-    </div>
-  );
+  const renderCourseRow = (courseList, isUpcoming) => {
+    if (courseList.length === 0) {
+      return (
+        <h1 className="text-5xl flex justify-center items-center">
+          No Courses Available
+        </h1>
+      );
+    }
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "20px",
+          justifyContent: "flex-start",
+        }}
+      >
+        {courseList.map((course) => (
+          <Card key={course.id} course={course} isUpcoming={isUpcoming} />
+        ))}
+      </div>
+    );
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <>
+    <div>
       <UserNavbar />
-      <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p style={{ color: "red" }}>{error}</p>
-        ) : (
-          <>
-            <div>
-              <h1 className="ml-10 mt-5 mb-5 text-2xl font-semibold">
-                Active Courses
-              </h1>
+      <div className="min-h-[80vh]  ">
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="dashboard tabs"
+            >
+              <Tab label="Active Courses" {...a11yProps(0)} />
+              <Tab label="Upcoming Courses" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          <div className="flex ">
+            <CustomTabPanel value={value} index={0}>
               {renderCourseRow(
                 courses.filter((course) => course.active === 1),
                 false
               )}
-
-              <h1 className="ml-10 mt-5 mb-5 text-2xl font-semibold">
-                Upcoming Courses
-              </h1>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
               {renderCourseRow(
                 courses.filter((course) => course.upcoming === 1),
                 true
               )}
-            </div>
-          </>
-        )}
+            </CustomTabPanel>
+          </div>
+        </Box>
       </div>
-    </>
+    </div>
   );
 };
 

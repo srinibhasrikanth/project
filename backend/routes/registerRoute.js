@@ -15,5 +15,5 @@ router.put("/save-attendance", saveAttendanceController);
 router.get("/get-register/:courseId", getEachController);
 
 //registered or not
-router.get("/get-registered-or-not/:courseId", registeredController);
+router.post("/get-registered-or-not/:courseId", registeredController);
 module.exports = router;

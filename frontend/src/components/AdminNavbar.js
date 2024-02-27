@@ -12,13 +12,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import { Button } from "@mui/material";
 import axios from "axios";
-//import logo from '../../../uploads'
 
 export default function AdminNavbar() {
   const { auth, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const [logoUrl, setLogoUrl] = useState("");
-  const [header, setHeader] = useState(""); // Add state for the header
+  const [header, setHeader] = useState("");
   const navigate = useNavigate();
 
   const handleMenu = (event) => {
@@ -58,18 +57,16 @@ export default function AdminNavbar() {
 
   const fetchHeader = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/profile"
-      );
-      setHeader(response.data.header); // Update the header state with the fetched header
+      const response = await axios.get("http://localhost:8000/api/v1/profile");
+      setHeader(response.data.header);
     } catch (error) {
       console.error("Error fetching header:", error);
     }
   };
 
   useEffect(() => {
-    fetchHeader(); // Fetch the header when the component mounts
-  }, []);
+    fetchHeader(); // Fetch the header on every change
+  }, [auth]); // Dependency array includes auth token to fetch header on auth change
 
   const handleStudentList = () => {
     const token = JSON.parse(localStorage.getItem("auth")).token;
@@ -82,26 +79,6 @@ export default function AdminNavbar() {
     console.log(id);
     navigate(`/admin-change-password/${id}/${token}`);
   };
-
-  /* const fetchLogoAndInstituteName = async () => {
-    try {
-      const filename = "logo-1706890908254-316165057.png"; // Replace with the actual filename
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/images/${filename}`
-      );
-      const { header, logoUrl } = response.data;
-      console.log(response.data);
-      setHeader(header); // Set the header state
-      setLogoUrl(logoUrl); // Set the logo URL state
-    } catch (error) {
-      console.error("Error fetching logo and institute name:", error);
-    }
-  };*/
-
-  // Call the fetchLogoAndInstituteName function when the component mounts
-  /* useEffect(() => {
-    fetchLogoAndInstituteName();
-  }, []);*/
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -163,10 +140,10 @@ export default function AdminNavbar() {
                 <MenuItem onClick={handleInstructor}>Add instructor</MenuItem>
                 <MenuItem onClick={handleAdd}>Add course</MenuItem>
                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                <MenuItem onClick={handleStudentList}>Student List</MenuItem>
                 <MenuItem onClick={handleChangePassword}>
                   Change Password
                 </MenuItem>
-                <MenuItem onClick={handleStudentList}>Student List</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>

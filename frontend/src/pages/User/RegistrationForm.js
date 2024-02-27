@@ -38,28 +38,6 @@ const RegistrationForm = ({ course }) => {
   const [loading, setLoading] = useState(false);
   const [reg, setReg] = useState(false);
 
-  useEffect(() => {
-    // Fetch course details from the backend
-    const fetchReg = async () => {
-      try {
-        // Extract the course ID from the URL
-        const courseId = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
-        // Make a GET request to fetch course details
-        const response = await axios.get(
-          ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`
-        );
-        if (response.status === 200) {
-          setReg(true);
-        } else if (response.status === 203) {
-          setReg(false);
-        }
-      } catch (error) {
-        console.error("Error fetching course details:", error);
-      }
-    };
-
-    fetchReg();
-  }, []);
   const handleSubmit = async () => {
     setLoading(true); // Set loading to true when button is clicked
     try {
@@ -133,6 +111,7 @@ const RegistrationForm = ({ course }) => {
         // Extract only the necessary fields for registration and set them in the state
         const { name, rollNumber, branch, year, section, whatsAppNumber } =
           userData;
+
         setRegistrationData({
           name,
           rollNumber,
@@ -141,6 +120,22 @@ const RegistrationForm = ({ course }) => {
           section,
           whatsAppNumber,
         });
+        try {
+          // Extract the course ID from the URL
+          const courseId = window.location.pathname.split("/").pop(); // Assuming the course ID is the last part of the URL
+          // Make a GET request to fetch course details
+          const response = await axios.post(
+            ` http://localhost:8000/api/v1/registration/get-registered-or-not/${courseId}`,
+            { rollNumber: rollNumber }
+          );
+          if (response.status === 200) {
+            setReg(true);
+          } else if (response.status === 203) {
+            setReg(false);
+          }
+        } catch (error) {
+          console.error("Error fetching course details:", error);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -157,10 +152,7 @@ const RegistrationForm = ({ course }) => {
 
   const containerStyle = {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh", // Set minimum height for full viewport height
+    minHeight: "100vh",
     padding: "20px",
   };
 
@@ -169,29 +161,30 @@ const RegistrationForm = ({ course }) => {
       <>
         <UserNavbar />
         <div style={containerStyle}>
-          <Grid container spacing={3}>
+          <Grid container spacing={5}>
             {/* Left side - Course details */}
             <Grid item xs={12} sm={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h5" mb={2}>
+                  <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
                     Course Details
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Name: {courseDetails.courseName}
+                    <strong>Name :</strong> {courseDetails.courseName}
                   </Typography>
 
                   <Typography variant="subtitle1" mb={2}>
-                    Timing: {courseDetails.timing}
+                    <strong>Timing:</strong> {courseDetails.timing}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Resource Person: {courseDetails.resourcePerson}
+                    <strong>Instructor:</strong> {courseDetails.resourcePerson}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Duration: {courseDetails.duration}
+                    <strong>Duration:</strong> {courseDetails.duration}
                   </Typography>
                   <Typography variant="subtitle1" mb={2}>
-                    Course Syllabus: {courseDetails.description}
+                    <strong>Course Syllabus:</strong>{" "}
+                    {courseDetails.description}
                   </Typography>
                 </CardContent>
               </Card>
@@ -216,6 +209,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     onChange={(e) => handleInputChange("name", e.target.value)}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -231,6 +225,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -246,6 +241,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -259,6 +255,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -274,9 +271,10 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
 
-                  {registrationSuccess ? (
+                  {reg ? (
                     <>
                       <Button variant="contained">
                         <Link to="/dashboard/:token">Explore more courses</Link>

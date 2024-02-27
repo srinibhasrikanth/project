@@ -8,17 +8,63 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+
 const Signup = () => {
-  const { register, handleSubmit, formState: err } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const navigate = useNavigate();
-
+  const [transaction, setTransaction] = useState("");
   const handleSubmit1 = async (formData) => {
     try {
       if (formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match");
         return;
       }
+
+      const options = {
+        key: "rzp_test_UpiX9NbPDSPRE9",
+        key_secret: "xEfrmNVHeJldfK0klLrczorH",
+        amount: 40000,
+        currency: "INR",
+        name: "Training App",
+        description: "for testing purpose",
+        handler: function (response) {
+          console.log("Payment response:", response);
+          setTransaction(response.razorpay_payment_id);
+
+          // Proceed with form submission if payment is successful
+          if (response.razorpay_payment_id) {
+            submitForm(formData);
+          }
+        },
+        prefill: {
+          name: `${formData.fname}`,
+          email: `${formData.email}`,
+          contact: `${formData.mobileno}`,
+        },
+        notes: {
+          address: "Razorpay Corporate office",
+        },
+        theme: {
+          color: "#0d3e69",
+        },
+      };
+
+      const pay = new window.Razorpay(options);
+
+      // Open the Razorpay payment modal
+      pay.open();
+    } catch (error) {
+      console.log("Signup error:", error);
+    }
+  };
+
+  const submitForm = async (formData) => {
+    try {
       const { confirmPassword, ...data1 } = formData;
       const response = await axios.post(
         "http://localhost:8000/api/v1/auth/register",
@@ -30,10 +76,9 @@ const Signup = () => {
       toast.success("Successfully registered");
       navigate("/");
     } catch (error) {
-      console.log("Signup error:", error);
+      console.log("Form submission error:", error);
     }
-    // console.log(formData);
-  };  
+  };
 
   const fieldStyle = {
     marginBottom: "20px",
@@ -314,13 +359,12 @@ const Signup = () => {
           </div>
 
           {/* Section 3 */}
-          <div style={sectionStyle}>
-            <Typography variant="h5" mb={2}>
-              Section 3: Authentication
-            </Typography>
+
+          <Typography variant="h5" mb={2}>
+            Section 3: Authentication
+          </Typography>
+          <div style={sectionStyle} className="mr-10">
             <div style={columnsContainerStyle}>
-              {/* Fields for Section 3 */}
-              {/* Username, Password, etc. */}
               <TextField
                 label="Username"
                 variant="outlined"
@@ -345,7 +389,7 @@ const Signup = () => {
                 {...register("confirmPassword")}
               />
               {/* Add more fields for Section 3 */}
-              <Button
+              {/* <Button
                 type="submit"
                 variant="contained"
                 sx={{
@@ -365,8 +409,25 @@ const Signup = () => {
                 style={{ display: "block", width: "fit-content" }}
               >
                 Create Account and Pay
-              </Button>
+              </Button> */}
             </div>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                backgroundColor: "primary.main",
+                border: "1px solid",
+                borderColor: "primary.main",
+                color: "white",
+                transition: "background-color 0.3s ease, transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+              disabled={Object.keys(errors).length !== 0}
+            >
+              Create Account and Pay
+            </Button>
           </div>
         </form>
       </div>

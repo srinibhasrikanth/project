@@ -15,13 +15,11 @@ import { toast } from "react-toastify";
 const AdminCard = ({ course }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [disable, setDisable] = useState(false);
 
-  const [active, setActive] = useState(false);
   const handleActivate = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/api/v1/courses/activate/${course._id}`
+        `  http://localhost:8000/api/v1/courses/activate/${course._id}`
       );
       toast.success("Course activated successfully!");
       window.location.reload();
@@ -30,10 +28,33 @@ const AdminCard = ({ course }) => {
     }
   };
 
-  const handleDeactivate = async () => {
+  const handleEdit = () => {
+    const token = JSON.parse(localStorage.getItem("auth")).token;
+    navigate(`/edit-course/${token}/${course._id}`);
+    setOpen(true); // Add this line to open the modal
+  };
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/courses/${course._id}`);
+      toast.success("Course deleted successfully!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+
+  const handleDisable = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/api/v1/courses/deactivate/${course._id}`
+        ` http://localhost:8000/api/v1/courses/deactivate/${course._id}`
       );
       toast.success("Course deactivated successfully!");
       window.location.reload();
@@ -47,49 +68,24 @@ const AdminCard = ({ course }) => {
     navigate(`/course-report/${token}/${course._id}`);
   };
 
-  const handleEdit = () => {
-    const token = JSON.parse(localStorage.getItem("auth")).token;
-    navigate(`/edit-course/${token}/${course._id}`);
-  };
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:8000/api/v1/courses/${course._id}`);
-      toast.success("Course deleted successfully!");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error deleting course:", error);
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setDisable(false);
-    setActive(false);
-  };
-
-  const handleOpenModal = () => {
-    setOpen(true);
-  };
-
-  const handleDisable = () => {
-    setDisable(true);
-  };
-
-  const handleActive = () => {
-    setActive(true);
-  };
   return (
     <>
       <Card
         sx={{
-          width: 260,
+          width: 270,
+          height: 230,
           margin: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <CardContent>
           <Typography variant="h5" component="div">
-            {course.courseName}
+            {course.courseName.length > 20 ? (
+              <div>{course.courseName.slice(0, 20)}...</div>
+            ) : (
+              <div>{course.courseName}</div>
+            )}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             By {course.resourcePerson}
@@ -104,20 +100,106 @@ const AdminCard = ({ course }) => {
         </CardContent>
         <CardActions
           sx={{
+            marginTop: "auto",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            marginLeft: "5px",
-            marginBottom: "5px",
+            justifyContent: "space-between",
+            padding: "10px", // Adjusted padding
           }}
         >
-          {course.active === 1 && (
-            <div className="flex">
+          {course.upcoming === 0 && course.active === 0 && (
+            <>
+              <Button
+                style={{ marginLeft: "auto" }}
+                variant="contained"
+                className="flex justify-end"
+                sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  marginLeft: "5px",
+                  marginRight: "5px", // Increased margin
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleReport}
+              >
+                Report
+              </Button>
+            </>
+          )}
+          {course.upcoming === 1 && (
+            <>
               <Button
                 variant="contained"
                 sx={{
-                  marginTop: "20px",
-                  marginRight: "10px",
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleActivate}
+              >
+                Activate
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  marginLeft: "5px",
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleEdit}
+              >
+                <EditIcon />
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  marginLeft: "5px",
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleOpenModal}
+              >
+                <DeleteIcon />
+              </Button>
+            </>
+          )}
+
+          {course.active === 1 && (
+            <div className="flex" style={{ marginLeft: "auto" }}>
+              <Button
+                variant="contained"
+                sx={{
                   backgroundColor: "white",
                   border: "1px solid",
                   borderColor: "primary.main",
@@ -136,7 +218,8 @@ const AdminCard = ({ course }) => {
               <Button
                 variant="contained"
                 sx={{
-                  marginTop: "20px",
+                  marginLeft: "5px",
+                  marginRight: "5px", // Increased margin
                   backgroundColor: "white",
                   border: "1px solid",
                   borderColor: "primary.main",
@@ -153,94 +236,6 @@ const AdminCard = ({ course }) => {
                 Report
               </Button>
             </div>
-          )}
-          {course.upcoming === 1 && (
-            <div className="flex">
-              <Button
-                variant="contained"
-                sx={{
-                  marginTop: "20px",
-
-                  backgroundColor: "white",
-                  border: "1px solid",
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                  transition: "background-color 0.3s ease, transform 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "primary.main",
-                    color: "white",
-                    transform: "scale(1.05)",
-                  },
-                }}
-                onClick={handleActive}
-              >
-                Activate
-              </Button>
-
-              <div className="flex justify-end">
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginTop: "20px",
-                    backgroundColor: "white",
-                    border: "1px solid",
-                    borderColor: "primary.main",
-                    color: "primary.main",
-                    transition:
-                      "background-color 0.3s ease, transform 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "primary.main",
-                      color: "white",
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                  onClick={handleEdit}
-                >
-                  <EditIcon />
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginTop: "20px",
-                    backgroundColor: "white",
-                    border: "1px solid",
-                    borderColor: "primary.main",
-                    color: "primary.main",
-                    transition:
-                      "background-color 0.3s ease, transform 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "primary.main",
-                      color: "white",
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                  onClick={handleOpenModal}
-                >
-                  <DeleteIcon />
-                </Button>
-              </div>
-            </div>
-          )}
-          {course.upcoming !== 1 && course.active !== 1 && (
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleReport}
-            >
-              Report
-            </Button>
           )}
         </CardActions>
       </Card>
@@ -259,7 +254,7 @@ const AdminCard = ({ course }) => {
             width: 600,
             height: 200,
             bgcolor: "background.paper",
-            borderRadius: 8,
+            border: "2px solid #000",
             boxShadow: 24,
             p: 4,
           }}
@@ -267,176 +262,46 @@ const AdminCard = ({ course }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Are you sure you want to delete this course?
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleClose}
-            >
-              No
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleDelete}
-            >
-              Yes
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-      <Modal
-        open={disable}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 600,
-            height: 200,
-            bgcolor: "background.paper",
-            borderRadius: 8,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Are you sure you want to deactivate this course?
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            This action cannot be undone.
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleClose}
-            >
-              No
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleDeactivate}
-            >
-              Yes
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-      <Modal
-        open={active}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 600,
-            height: 200,
-            bgcolor: "background.paper",
-            borderRadius: 8,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Are you sure you want to activate this course?
-          </Typography>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleClose}
-            >
-              No
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleActivate}
-            >
-              Yes
-            </Button>
-          </Box>
+          <Button
+            onClick={handleClose}
+            sx={{
+              mt: 2,
+              backgroundColor: "white",
+              border: "1px solid",
+              borderColor: "primary.main",
+              color: "primary.main",
+              transition: "background-color 0.3s ease, transform 0.3s ease",
+              "&:hover": {
+                backgroundColor: "primary.main",
+                color: "white",
+                transform: "scale(1.05)",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDelete}
+            sx={{
+              mt: 2,
+              marginLeft: "5px",
+              backgroundColor: "white",
+              border: "1px solid",
+              borderColor: "primary.main",
+              color: "primary.main",
+              transition: "background-color 0.3s ease, transform 0.3s ease",
+              "&:hover": {
+                backgroundColor: "primary.main",
+                color: "white",
+                transform: "scale(1.05)",
+              },
+            }}
+          >
+            Confirm
+          </Button>
         </Box>
       </Modal>
     </>

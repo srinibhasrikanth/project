@@ -36,7 +36,7 @@ const CourseCard = ({ course, isUpcoming }) => {
 
   return (
     <div className="mb-5">
-      <Card sx={{ minWidth: 275 }} style={{ marginLeft: "10px" }}>
+      <Card sx={{ minWidth: 275, height: 250 }} style={{ marginLeft: "10px" }}>
         <CardContent>
           <Typography variant="h5" component="div">
             {course.courseName}
@@ -55,40 +55,45 @@ const CourseCard = ({ course, isUpcoming }) => {
         <CardActions>
           {!isUpcoming && // Conditionally render the button only if it's not an upcoming course
             (isRegistered ? (
-              <Button variant="contained"
-              sx={{
-                marginTop: "20px",
-                marginRight: "10px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }} disabled>
+              <Button
+                variant="contained"
+                sx={{
+                  marginTop: "20px",
+                  marginRight: "10px",
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                disabled
+              >
                 Already Registered
               </Button>
-
             ) : (
-              <Button variant="contained"
-              sx={{
-                marginTop: "20px",
-                marginRight: "10px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }} onClick={handleRegister}>
+              <Button
+                variant="contained"
+                sx={{
+                  marginTop: "20px",
+                  marginRight: "10px",
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleRegister}
+              >
                 Register Now
               </Button>
             ))}

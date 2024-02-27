@@ -1,26 +1,28 @@
 const mongoose = require("mongoose");
 
-const AttendanceSchema = new mongoose.Schema({
+// Define the schema for attendance records
+const attendanceSchema = new mongoose.Schema({
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Course",
+    ref: "courses", // Assuming Course is the model for the course
     required: true,
   },
+  details:[
+    {
   date: {
-    type: Date,
-    required: true,
-  },
-  rollNumber: {
     type: String,
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["Present", "Absent"],
+  rollNumberStatus: {
+    type: Map,
+    of: String,
     required: true,
   },
+}
+]
 });
 
-const Attendance = mongoose.model("Attendance", AttendanceSchema);
+// Define the Attendance model
+const Attendance = mongoose.model("Attendance", attendanceSchema);
 
 module.exports = Attendance;

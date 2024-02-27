@@ -33,6 +33,14 @@ const userSchema = new mongoose.Schema(
     motherAddress: { type: String },
     username: { type: String },
     password: { type: String },
+    delete: {
+      type: Number,
+      default: 0, // 0 means user is active, 1 means user is deleted
+    },
+    role: {
+      type: String,
+      default: "user",
+    },
   },
   { timestamps: true }
 );

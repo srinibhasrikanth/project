@@ -61,7 +61,7 @@ const sendRegistrationEmail = async (
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "jnyn gkvr luuv awdu",
+      pass: process.env.pass,
     },
   });
 
@@ -225,7 +225,7 @@ const sendAllEmail = async (
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "jnyn gkvr luuv awdu",
+      pass: process.env.pass,
     },
   });
 
@@ -379,7 +379,7 @@ const sendUpdationEmail = async (
     service: "gmail",
     auth: {
       user: "srinibha.srikanth@gmail.com",
-      pass: "jnyn gkvr luuv awdu",
+      pass: process.env.pass,
     },
   });
 

@@ -127,7 +127,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
 
   const containerStyle = {
     textAlign: "center",
-    maxWidth: "600px",
+    maxWidth: "400px",
     margin: "auto",
     paddingTop: "30px",
   };
@@ -135,8 +135,8 @@ const AddResource = ({ onResourcePersonAdded }) => {
   return (
     <>
       <AdminNavbar />
-      <div style={containerStyle}>
-        <Typography variant="h5" mb={2}>
+      <div className="w-1/4 m-auto mt-10">
+        <Typography variant="h5" mb={2} className="flex justify-center">
           ADD INSTRUCTOR
         </Typography>
 
@@ -149,6 +149,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
           value={resourcePersonData.name}
           error={!!errors.name}
           helperText={errors.name}
+          size="small"
         />
         <TextField
           label="Email"
@@ -159,6 +160,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
           value={resourcePersonData.email}
           error={!!errors.email}
           helperText={errors.email}
+          size="small"
         />
         <TextField
           label="Designation (Student/Faculty)"
@@ -170,6 +172,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
           value={resourcePersonData.designation}
           error={!!errors.designation}
           helperText={errors.designation}
+          size="small"
         >
           {["Student", "Faculty"].map((designation) => (
             <MenuItem key={designation} value={designation}>
@@ -186,6 +189,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
             value={resourcePersonData.id}
             error={!!errors.rollNo}
             helperText={errors.rollNo}
+            size="small"
           />
         ) : (
           <TextField
@@ -196,6 +200,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
             value={resourcePersonData.id}
             error={!!errors.idNumber}
             helperText={errors.idNumber}
+            size="small"
           />
         )}
         <TextField
@@ -206,6 +211,7 @@ const AddResource = ({ onResourcePersonAdded }) => {
           onChange={(e) => handleInputChange("mobileNumber", e.target.value)}
           value={resourcePersonData.mobileNumber}
           error={!!errors.phoneNo}
+          size="small"
           helperText={errors.phoneNo}
         />
         <Button
