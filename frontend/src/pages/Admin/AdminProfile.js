@@ -7,6 +7,7 @@ import AdminNavbar from "../../components/AdminNavbar";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Typography } from "@mui/material";
 const AdminProfile = () => {
   const [headerName, setHeaderName] = useState("");
   const [logo, setLogo] = useState(null);
@@ -41,72 +42,50 @@ const AdminProfile = () => {
       console.error("Error updating profile:", error);
     }
   };
+  const fieldStyle = {
+    marginBottom: "20px",
+    width: "100%",
+  };
 
   return (
     <>
       <AdminNavbar />
-      <Container component="main" maxWidth="xs">
-        <Box
+      <div className="w-1/4 m-auto mt-10">
+        <Typography variant="h5" mb={2} className="flex justify-center">
+          PROFILE
+        </Typography>
+        <TextField
+          id="header-name"
+          label="Header Name"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={headerName}
+          onChange={(e) => setHeaderName(e.target.value)}
+          size="small"
+        />
+
+        <Button
+          variant="contained"
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginTop: "20px",
+            backgroundColor: "white",
+            border: "1px solid",
+            borderColor: "primary.main",
+            color: "primary.main",
+            transition: "background-color 0.3s ease, transform 0.3s ease",
+            "&:hover": {
+              backgroundColor: "primary.main",
+              color: "white",
+              transform: "scale(1.05)",
+            },
           }}
+          onClick={handleSubmit}
+          fullWidth
         >
-          <h3 className="text-2xl pb-5 pt-3 font-semibold text-center text-gray-700">
-            PROFILE
-          </h3>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="header-name"
-              label="Header Name"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={headerName}
-              onChange={(e) => setHeaderName(e.target.value)}
-            />
-            <input
-              type="file"
-              accept="image/*"
-              id="logo-upload"
-              onChange={handleLogoChange}
-              style={{ margin: "10px 0" }}
-            />
-            {logo && (
-              <img
-                src={URL.createObjectURL(logo)}
-                alt="Logo Preview"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100px",
-                  margin: "10px 0",
-                }}
-              />
-            )}
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "20px",
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: "primary.main",
-                color: "primary.main",
-                transition: "background-color 0.3s ease, transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  transform: "scale(1.05)",
-                },
-              }}
-              onClick={handleSubmit}
-              fullWidth
-            >
-              Update Profile
-            </Button>
-          </form>
-        </Box>
-      </Container>
+          Update Profile
+        </Button>
+      </div>
     </>
   );
 };

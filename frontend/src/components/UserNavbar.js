@@ -60,7 +60,7 @@ export default function UserNavbar() {
   const fetchHeader = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/v1/profile");
-      setHeader(response.data.header); // Update the header state with the fetched header
+      setHeader(response.data.header);
     } catch (error) {
       console.error("Error fetching header:", error);
     }
@@ -81,7 +81,6 @@ export default function UserNavbar() {
               style={{
                 width: "40px",
                 height: "40px",
-
                 cursor: "pointer",
               }}
               onClick={handleLogoClick}
@@ -99,39 +98,64 @@ export default function UserNavbar() {
         </div>
         <div>
           {auth?.token ? (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="black"
-                style={{ fontSize: "35px" }}
-              >
-                <AccountCircle fontSize="inherit" />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleChangePassword}>
-                  Change Password
-                </MenuItem>
+            // <div>
+            //   <IconButton
+            //     size="large"
+            //     aria-label="account of current user"
+            //     aria-controls="menu-appbar"
+            //     aria-haspopup="true"
+            //     onClick={handleMenu}
+            //     color="black"
+            //     style={{ fontSize: "35px" }}
+            //   >
+            //     <AccountCircle fontSize="inherit" />
+            //   </IconButton>
+            //   <Menu
+            //     id="menu-appbar"
+            //     anchorEl={anchorEl}
+            //     anchorOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     keepMounted
+            //     transformOrigin={{
+            //       vertical: "top",
+            //       horizontal: "right",
+            //     }}
+            //     open={Boolean(anchorEl)}
+            //     onClose={handleClose}
+            //   >
+            //     <MenuItem onClick={handleChangePassword}>
+            //       Change Password
+            //     </MenuItem>
 
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
+            //     <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            //   </Menu>
+            // </div>
+            <div>
+              <Button
+                variant={isHovered[0] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([true, false])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+              >
+                <Link to="/change-password">Change Password</Link>
+              </Button>
+              {"          "}
+              <Button
+                variant={isHovered[1] ? "contained" : "outlined"}
+                onMouseEnter={() => setIsHovered([false, true])}
+                onMouseLeave={() => setIsHovered([false, false])}
+                style={{
+                  "&:hover": { backgroundColor: "#your-hover-color" },
+                }}
+                onClick={handleLogout}
+              >
+                {" "}
+                Logout
+              </Button>
             </div>
           ) : (
             <div className="flex gap-4">

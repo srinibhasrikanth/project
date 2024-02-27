@@ -152,10 +152,7 @@ const RegistrationForm = ({ course }) => {
 
   const containerStyle = {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh", // Set minimum height for full viewport height
+    minHeight: "100vh",
     padding: "20px",
   };
 
@@ -164,7 +161,7 @@ const RegistrationForm = ({ course }) => {
       <>
         <UserNavbar />
         <div style={containerStyle}>
-          <Grid container spacing={3}>
+          <Grid container spacing={5}>
             {/* Left side - Course details */}
             <Grid item xs={12} sm={6}>
               <Card>
@@ -212,6 +209,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     onChange={(e) => handleInputChange("name", e.target.value)}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -227,6 +225,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -242,6 +241,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -255,6 +255,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
                   <TextField
                     variant="outlined"
@@ -270,6 +271,7 @@ const RegistrationForm = ({ course }) => {
                       readOnly: true,
                     }}
                     InputLabelProps={{ shrink: true }}
+                    size="small"
                   />
 
                   {reg ? (

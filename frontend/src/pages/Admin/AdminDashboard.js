@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AdminCard from "./AdminCard";
 import AdminNavbar from "../../components/AdminNavbar";
 import PropTypes from "prop-types";
@@ -8,6 +8,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+import { useAuth } from "../../context/auth";
 
 const UnauthenticatedDashboard = () => (
   <>
@@ -44,7 +47,7 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `custom-tab-${index}`,
-    "aria-controls": `custom-tabpanel-${index}`,
+    "aria-controls": ` custom-tabpanel-${index}`,
   };
 }
 
@@ -53,6 +56,14 @@ const AuthenticatedDashboard = ({ token }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { auth, logout } = useAuth();
+  const handleAddCourse = () => {
+    navigate(`/add-course/${auth.token}`);
+  };
+  const handleAddInstructor = () => {
+    navigate(`/add-instructor/${auth.token}`);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -77,13 +88,22 @@ const AuthenticatedDashboard = ({ token }) => {
     fetchCourses();
   }, [token]);
 
-  const renderCourseRow = (courseList) => (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-      {courseList.map((course) => (
-        <AdminCard key={course.id} course={course} />
-      ))}
-    </div>
-  );
+  const renderCourseRow = (courseList) => {
+    if (courseList.length === 0) {
+      return (
+        <h1 className="text-5xl flex justify-center items-center">
+          No Courses Available
+        </h1>
+      );
+    }
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+        {courseList.map((course) => (
+          <AdminCard key={course.id} course={course} />
+        ))}
+      </div>
+    );
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
@@ -92,17 +112,66 @@ const AuthenticatedDashboard = ({ token }) => {
     <>
       <AdminNavbar />
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="dashboard tabs"
-          >
-            <Tab label="Active Courses" {...a11yProps(0)} />
-            <Tab label="Upcoming Courses" {...a11yProps(1)} />
-            <Tab label="Completed Courses" {...a11yProps(2)} />
-          </Tabs>
-        </Box>
+        <div className="flex justify-between">
+          <div>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="dashboard tabs"
+              >
+                <Tab label="Active Courses" {...a11yProps(0)} />
+                <Tab label="Upcoming Courses" {...a11yProps(1)} />
+                <Tab label="Completed Courses" {...a11yProps(2)} />
+              </Tabs>
+            </Box>
+          </div>
+          <div className="mt-2">
+            <Button
+              onClick={handleAddCourse}
+              variant="contained"
+              sx={{
+                borderRadius: "16px",
+                backgroundColor: "primary.main",
+                border: "1px solid",
+                borderColor: "primary.main",
+                color: "white",
+                transition: "background-color 0.3s ease, transform 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <AddCircleOutlinedIcon className="mr-2" />
+              Add Course
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleAddInstructor}
+              sx={{
+                borderRadius: "16px",
+                marginRight: "10px",
+                marginLeft: "10px",
+                backgroundColor: "primary.main",
+                border: "1px solid",
+                borderColor: "primary.main",
+                color: "white",
+                transition: "background-color 0.3s ease, transform 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <AddCircleOutlinedIcon className="mr-2" />
+              Add instructor
+            </Button>
+          </div>
+        </div>
+
         <CustomTabPanel value={value} index={0}>
           {renderCourseRow(courses.filter((course) => course.active === 1))}
         </CustomTabPanel>

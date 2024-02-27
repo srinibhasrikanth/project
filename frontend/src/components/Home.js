@@ -13,12 +13,12 @@ import {
   TextField,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/auth";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/auth";
-import UserNavbar from "../../components/UserNavbar";
+import UserNavbar from "./UserNavbar";
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -52,7 +52,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Login() {
+export default function Home() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [value, setValue] = React.useState(0);

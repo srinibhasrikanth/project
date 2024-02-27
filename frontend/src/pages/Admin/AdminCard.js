@@ -31,8 +31,8 @@ const AdminCard = ({ course }) => {
   const handleEdit = () => {
     const token = JSON.parse(localStorage.getItem("auth")).token;
     navigate(`/edit-course/${token}/${course._id}`);
+    setOpen(true); // Add this line to open the modal
   };
-
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:8000/api/v1/courses/${course._id}`);
@@ -106,6 +106,34 @@ const AdminCard = ({ course }) => {
             padding: "10px", // Adjusted padding
           }}
         >
+          {course.upcoming === 0 && course.active === 0 && (
+            <>
+              <Button
+                style={{ marginLeft: "auto" }}
+                variant="contained"
+                className="flex justify-end"
+                sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  marginLeft: "5px",
+                  marginRight: "5px", // Increased margin
+                  backgroundColor: "white",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  color: "primary.main",
+                  transition: "background-color 0.3s ease, transform 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    transform: "scale(1.05)",
+                  },
+                }}
+                onClick={handleReport}
+              >
+                Report
+              </Button>
+            </>
+          )}
           {course.upcoming === 1 && (
             <>
               <Button

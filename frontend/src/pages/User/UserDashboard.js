@@ -43,8 +43,8 @@ CustomTabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: `custom-tab-${index}`,
-    "aria-controls": `custom-tabpanel-${index}`,
+    id: ` custom-tab-${index}`,
+    "aria-controls": ` custom-tabpanel-${index}`,
   };
 }
 
@@ -76,52 +76,65 @@ const AuthenticatedDashboard = ({ token }) => {
     fetchCourses();
   }, [token]);
 
-  const renderCourseRow = (courseList, isUpcoming) => (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "20px",
-        justifyContent: "flex-start",
-      }}
-    >
-      {courseList.map((course) => (
-        <Card key={course.id} course={course} isUpcoming={isUpcoming} />
-      ))}
-    </div>
-  );
+  const renderCourseRow = (courseList, isUpcoming) => {
+    if (courseList.length === 0) {
+      return (
+        <h1 className="text-5xl flex justify-center items-center">
+          No Courses Available
+        </h1>
+      );
+    }
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "20px",
+          justifyContent: "flex-start",
+        }}
+      >
+        {courseList.map((course) => (
+          <Card key={course.id} course={course} isUpcoming={isUpcoming} />
+        ))}
+      </div>
+    );
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <>
+    <div>
       <UserNavbar />
-      <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="dashboard tabs"
-          >
-            <Tab label="Active Courses" {...a11yProps(0)} />
-            <Tab label="Upcoming Courses" {...a11yProps(1)} />
-          </Tabs>
+      <div className="min-h-[80vh]  ">
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="dashboard tabs"
+            >
+              <Tab label="Active Courses" {...a11yProps(0)} />
+              <Tab label="Upcoming Courses" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          <div className="flex ">
+            <CustomTabPanel value={value} index={0}>
+              {renderCourseRow(
+                courses.filter((course) => course.active === 1),
+                false
+              )}
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              {renderCourseRow(
+                courses.filter((course) => course.upcoming === 1),
+                true
+              )}
+            </CustomTabPanel>
+          </div>
         </Box>
-        <CustomTabPanel value={value} index={0}>
-          {renderCourseRow(
-            courses.filter((course) => course.active === 1),
-            false
-          )}
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          {renderCourseRow(
-            courses.filter((course) => course.upcoming === 1),
-            true
-          )}
-        </CustomTabPanel>
-      </Box>
-    </>
+      </div>
+    </div>
   );
 };
 

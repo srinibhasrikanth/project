@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 const Signup = () => {
-  //const { register, handleSubmit, formState: err } = useForm();
   const {
     register,
     handleSubmit,
@@ -43,7 +42,7 @@ const Signup = () => {
           }
         },
         prefill: {
-          name: ` ${formData.fname}`,
+          name: `${formData.fname}`,
           email: `${formData.email}`,
           contact: `${formData.mobileno}`,
         },
@@ -360,13 +359,12 @@ const Signup = () => {
           </div>
 
           {/* Section 3 */}
-          <div style={sectionStyle}>
-            <Typography variant="h5" mb={2}>
-              Section 3: Authentication
-            </Typography>
+
+          <Typography variant="h5" mb={2}>
+            Section 3: Authentication
+          </Typography>
+          <div style={sectionStyle} className="mr-10">
             <div style={columnsContainerStyle}>
-              {/* Fields for Section 3 */}
-              {/* Username, Password, etc. */}
               <TextField
                 label="Username"
                 variant="outlined"
@@ -412,28 +410,24 @@ const Signup = () => {
               >
                 Create Account and Pay
               </Button> */}
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  marginRight: "10px",
-                  backgroundColor: "white",
-                  border: "1px solid",
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                  transition: "background-color 0.3s ease, transform 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "primary.main",
-                    color: "white",
-                    transform: "scale(1.05)",
-                  },
-                }}
-                style={{ display: "block", width: "fit-content" }}
-                disabled={Object.keys(errors).length !== 0}
-              >
-                Create Account and Pay
-              </Button>
             </div>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                backgroundColor: "primary.main",
+                border: "1px solid",
+                borderColor: "primary.main",
+                color: "white",
+                transition: "background-color 0.3s ease, transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+              disabled={Object.keys(errors).length !== 0}
+            >
+              Create Account and Pay
+            </Button>
           </div>
         </form>
       </div>
