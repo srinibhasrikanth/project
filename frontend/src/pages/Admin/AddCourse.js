@@ -10,14 +10,17 @@ import AdminNavbar from "../../components/AdminNavbar";
 import { useNavigate } from "react-router-dom";
 
 const AddCourse = () => {
+  // Add state properties for start date and end date
   const [courseData, setCourseData] = useState({
     courseName: "",
     timing: "",
     resourcePerson: "",
     duration: "",
     description: "",
-    startDate: "",
+    startDate: "", // Add start date property
+    endDate: "", // Add end date property
   });
+
   const [errors, setErrors] = useState({
     courseName: "",
     startDate: "",
@@ -72,7 +75,7 @@ const AddCourse = () => {
       [field]: value,
     });
   };
-
+  // Function to handle changes to the start date field
   const handleStartDateChange = (date) => {
     const validationErrors = { ...errors };
 
@@ -93,6 +96,29 @@ const AddCourse = () => {
     setCourseData({
       ...courseData,
       startDate: date,
+    });
+  };
+
+  // Function to handle changes to the end date field
+  const handleEndDateChange = (date) => {
+    const validationErrors = { ...errors };
+
+    if (!date) {
+      validationErrors.endDate = "Course End Date is required";
+    } else {
+      const selectedDate = new Date(date);
+      const currentDate = new Date();
+      if (selectedDate < currentDate) {
+        validationErrors.endDate = "Course End Date should be in the future";
+      } else {
+        validationErrors.endDate = "";
+      }
+    }
+
+    setErrors(validationErrors);
+    setCourseData({
+      ...courseData,
+      endDate: date,
     });
   };
 
@@ -190,117 +216,129 @@ const AddCourse = () => {
     <>
       <AdminNavbar />
       <div className="w-1/4 m-auto mt-10">
-        
-          <Typography variant="h5" mb={2} className="flex justify-center">
-            ADD COURSE
-          </Typography>
-      
+        <Typography variant="h5" mb={2} className="flex justify-center">
+          ADD COURSE
+        </Typography>
+
+        <TextField
+          label="Name of the Course"
+          variant="outlined"
+          required
+          style={fieldStyle}
+          onChange={(e) => handleInputChange("courseName", e.target.value)}
+          value={courseData.courseName}
+          error={!!errors.courseName}
+          helperText={errors.courseName}
+          size="small"
+        />
+        <div style={{ display: "flex" }}>
           <TextField
-            label="Name of the Course"
+            label="Course Start Date"
+            type="date"
             variant="outlined"
             required
-            style={fieldStyle}
-            onChange={(e) => handleInputChange("courseName", e.target.value)}
-            value={courseData.courseName}
-            error={!!errors.courseName}
-            helperText={errors.courseName}
-            size="small"
-          />
-          <div style={{ display: "flex" }}>
-            <TextField
-              label="Course Start Date"
-              type="date"
-              variant="outlined"
-              required
-              style={{ ...fieldStyle, flex: 1 }}
-              onChange={(e) => handleStartDateChange(e.target.value)}
-              value={courseData.startDate}
-              error={!!errors.startDate}
-              helperText={errors.startDate}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              size="small"
-            />
-          </div>
-          <div style={{ display: "flex" }}>
-            <TextField
-              label="Duration"
-              variant="outlined"
-              required
-              style={{ ...fieldStyle, marginRight: "10px", flex: 1 }}
-              onChange={(e) => handleInputChange("duration", e.target.value)}
-              value={courseData.duration}
-              error={!!errors.duration}
-              helperText={errors.duration}
-              size="small"
-            />
-            <TextField
-              label="Course Timings"
-              variant="outlined"
-              required
-              style={{ ...fieldStyle, flex: 1 }}
-              onChange={(e) => handleInputChange("timing", e.target.value)}
-              value={courseData.timing}
-              error={!!errors.timing}
-              helperText={errors.timing}
-              size="small"
-            />
-          </div>
-          <TextField
-            label="Instructor"
-            select
-            variant="outlined"
-            required
-            style={fieldStyle}
-            onChange={(e) =>
-              handleInputChange("resourcePerson", e.target.value)
-            }
-            value={courseData.resourcePerson}
-            error={!!errors.resourcePerson}
-            helperText={errors.resourcePerson}
-            size="small"
-          >
-            {resourcePersons.map((person) => (
-              <MenuItem key={person.id} value={person.name}>
-                {person.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Syllabus"
-            multiline
-            rows={4}
-            variant="outlined"
-            required
-            style={fieldStyle}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            value={courseData.description}
-            size="small"
-          />
-          <Button
-            variant="contained"
-            sx={{
-              marginTop: "10px",
-              backgroundColor: "white",
-              border: "1px solid",
-              borderColor: "primary.main",
-              color: "primary.main",
-              transition: "background-color 0.3s ease, transform 0.3s ease",
-              "&:hover": {
-                backgroundColor: "primary.main",
-                color: "white",
-                transform: "scale(1.05)",
-              },
+            style={{ ...fieldStyle, flex: 1, marginRight: "4px" }}
+            onChange={(e) => handleStartDateChange(e.target.value)}
+            value={courseData.startDate}
+            error={!!errors.startDate}
+            helperText={errors.startDate}
+            InputLabelProps={{
+              shrink: true,
             }}
-            onClick={handleSubmit}
-            disabled={loading} // Disable the button when loading is true
-          >
-            {loading ? "Adding Course..." : "Add Course"}{" "}
-            {/* Show loading text when loading is true */}
-          </Button>
+            size="small"
+          />
+
+          <TextField
+            label="Course End Date"
+            type="date"
+            variant="outlined"
+            required
+            style={{ ...fieldStyle, flex: 1 }}
+            onChange={(e) => handleEndDateChange(e.target.value)}
+            value={courseData.endDate}
+            error={!!errors.endDate}
+            helperText={errors.endDate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            size="small"
+          />
         </div>
-     
+        <div style={{ display: "flex" }}>
+          <TextField
+            label="Duration"
+            variant="outlined"
+            required
+            style={{ ...fieldStyle, flex: 1, marginRight: "4px" }}
+            onChange={(e) => handleInputChange("duration", e.target.value)}
+            value={courseData.duration}
+            error={!!errors.duration}
+            helperText={errors.duration}
+            size="small"
+          />
+          <TextField
+            label="Course Timings"
+            variant="outlined"
+            required
+            style={{ ...fieldStyle, flex: 1 }}
+            onChange={(e) => handleInputChange("timing", e.target.value)}
+            value={courseData.timing}
+            error={!!errors.timing}
+            helperText={errors.timing}
+            size="small"
+          />
+        </div>
+        <TextField
+          label="Instructor"
+          select
+          variant="outlined"
+          required
+          style={fieldStyle}
+          onChange={(e) => handleInputChange("resourcePerson", e.target.value)}
+          value={courseData.resourcePerson}
+          error={!!errors.resourcePerson}
+          helperText={errors.resourcePerson}
+          size="small"
+        >
+          {resourcePersons.map((person) => (
+            <MenuItem key={person.id} value={person.name}>
+              {person.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Syllabus"
+          multiline
+          rows={4}
+          variant="outlined"
+          required
+          style={fieldStyle}
+          onChange={(e) => handleInputChange("description", e.target.value)}
+          value={courseData.description}
+          size="small"
+        />
+        <Button
+          variant="contained"
+          sx={{
+            marginTop: "10px",
+            backgroundColor: "white",
+            border: "1px solid",
+            borderColor: "primary.main",
+            color: "primary.main",
+            transition: "background-color 0.3s ease, transform 0.3s ease",
+            "&:hover": {
+              backgroundColor: "primary.main",
+              color: "white",
+              transform: "scale(1.05)",
+            },
+          }}
+          onClick={handleSubmit}
+          disabled={loading} // Disable the button when loading is true
+        >
+          {loading ? "Adding Course..." : "Add Course"}{" "}
+          {/* Show loading text when loading is true */}
+        </Button>
+      </div>
     </>
   );
 };

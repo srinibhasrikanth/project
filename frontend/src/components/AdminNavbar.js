@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth";
 import { Button } from "@mui/material";
 import axios from "axios";
+import MenuIcon from "@mui/icons-material/Menu";
 
 export default function AdminNavbar() {
   const { auth, logout } = useAuth();
@@ -120,7 +121,7 @@ export default function AdminNavbar() {
                 color="black"
                 style={{ fontSize: "35px" }}
               >
-                <AccountCircle fontSize="inherit" />
+                <MenuIcon fontSize="inherit" />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -137,8 +138,6 @@ export default function AdminNavbar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleInstructor}>Add instructor</MenuItem>
-                <MenuItem onClick={handleAdd}>Add course</MenuItem>
                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleStudentList}>Student List</MenuItem>
                 <MenuItem onClick={handleChangePassword}>

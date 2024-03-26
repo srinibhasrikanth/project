@@ -5,11 +5,13 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   duration: {
     type: String,
   },
   startDate: {
+    type: String,
+  },
+  endDate: {
     type: String,
   },
   timing: {

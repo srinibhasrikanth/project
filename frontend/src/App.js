@@ -30,6 +30,7 @@ import Navbar from "./components/Navbar";
 import PDF from "./pages/PDF";
 import Attendance1 from "./pages/Attendance1";
 import Chart from "./components/Chart1";
+import FacultyAttendance from "./pages/Faculty/FacultyAttendance";
 
 const App = () => {
   return (
@@ -64,7 +65,7 @@ const App = () => {
           path="/instructor-course-report/:token/:id"
           element={<FacultyReport />}
         />
-        <Route path="/course-attendance/:token/:id" element={<Attendance />} />
+        <Route path="/course-attendance/:token/:id" element={<FacultyAttendance />} />
 
         <Route path="/dashboard/:token" element={<UserDashboard />} />
         <Route
