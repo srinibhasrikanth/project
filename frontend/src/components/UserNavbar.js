@@ -69,7 +69,7 @@ export default function UserNavbar() {
   useEffect(() => {
     fetchHeader(); // Fetch the header when the component mounts
   }, []);
-
+  //useEffect(() => {}, auth);
   return (
     <div className="flex w-full justify-center shadow-md">
       <div className=" h-[10vh] flex items-center justify-between w-[95vw]">
@@ -140,8 +140,9 @@ export default function UserNavbar() {
                 style={{
                   "&:hover": { backgroundColor: "#your-hover-color" },
                 }}
+                onClick={handleChangePassword}
               >
-                <Link to="/change-password">Change Password</Link>
+                Change Password
               </Button>
               {"          "}
               <Button

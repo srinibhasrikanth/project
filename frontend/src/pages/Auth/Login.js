@@ -88,7 +88,6 @@ export default function Login() {
   const handleFaculty = async () => {
     // Handle form submission logic here
     console.log("Submit button clicked!");
-
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/resource/instructor-login",

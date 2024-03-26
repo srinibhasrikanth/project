@@ -2,11 +2,40 @@ const JWT = require("jsonwebtoken");
 const courseModel = require("../models/courseModel.js");
 const userModel = require("../models/userModel.js");
 const nodemailer = require("nodemailer");
+
+//CRUD
 const resourceModel = require("../models/resourceModel.js");
 const createCourseController = async (req, res) => {
   try {
     const courseData = req.body;
     const newCourse = new courseModel(courseData);
+
+    // Calculate the number of days between start date and end date
+    const startDate = new Date(courseData.startDate);
+    const endDate = new Date(courseData.endDate);
+    const numberOfDays = Math.ceil(
+      (endDate - startDate) / (1000 * 60 * 60 * 24)
+    );
+
+    // Calculate duration per session
+    const durationPerSession = courseData.duration / numberOfDays;
+
+    // Generate session timings for each day
+    const sessionTimings = [];
+    let currentTime = new Date(startDate);
+    for (let i = 0; i < numberOfDays; i++) {
+      const startTime = currentTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const endTime = new Date(
+        currentTime.getTime() + durationPerSession * 60 * 60 * 1000
+      ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const sessionTiming = `${startTime} - ${endTime}`;
+      sessionTimings.push(sessionTiming);
+      currentTime.setDate(currentTime.getDate() + 1); // Move to the next day
+    }
+
     const saveCourse = await newCourse.save();
     const users = await resourceModel.findOne({
       name: courseData.resourcePerson,
@@ -19,7 +48,8 @@ const createCourseController = async (req, res) => {
       courseData.courseName,
       courseData.duration,
       courseData.startDate,
-      courseData.timing
+      courseData.endDate,
+      sessionTimings // Pass session timings to the sendRegistrationEmail function
     );
 
     res.status(200).json({
@@ -44,7 +74,8 @@ const sendRegistrationEmail = async (
   courseName,
   duration,
   startDate,
-  timing
+  timing,
+  sessionTimings
 ) => {
   const formatDate = (date) => {
     const d = new Date(date);
@@ -75,6 +106,7 @@ const sendRegistrationEmail = async (
   Duration: ${duration}
   Start Date:${formattedStartDate}
   Timings: ${timing}
+  session : ${sessionTimings}
   
   Your role as an instructor is crucial in providing valuable guidance and knowledge to our students. We trust that your expertise and dedication will contribute greatly to the success of this course.
   

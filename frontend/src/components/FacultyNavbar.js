@@ -70,6 +70,8 @@ export default function FacultyNavbar() {
     fetchHeader(); // Fetch the header when the component mounts
   }, [auth]); // Run the effect whenever the auth context changes
 
+  useEffect(() => {}, auth);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "white" }}>
